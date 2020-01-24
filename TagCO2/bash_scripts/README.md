@@ -3,4 +3,4 @@
 
 2, Execute add_species_database.sh where species_database_mod.F90 is located (usually .../Code.xx.xx.x/Headers), need to clean and compile the code again afterwards.
 
-Consider rewrite all these with Python
+Consider rewriting all these with Python

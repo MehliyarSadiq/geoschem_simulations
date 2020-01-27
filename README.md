@@ -11,7 +11,7 @@
 2.  Getting started with GEOS-Chem
 
 - youtube video: https://www.youtube.com/watch?v=LOobuuhNdAg&t=1558s
-- setup linux environment (e.g. compilers, NetCDF libs, etc.), Mark sent me his settings in .bashrc script. Fei also has .bashrc settings on his Github. Both are similar.
+- setup linux environment (e.g. compilers, NetCDF libs, etc.), M sent me his settings in .bashrc script. Fei also has .bashrc settings on his Github. Both are similar.
 - Youtube video's building part is outdated, check GC wiki for updated one: make -j4 build, instead of make -j4 mpbuild
 - and then just run the model.
 

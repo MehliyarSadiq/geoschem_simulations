@@ -1,4 +1,4 @@
 ### Python scripts for TagCO2 simulations
 
-###util
+### ./util
 Contains useful functions

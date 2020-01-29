@@ -85,6 +85,7 @@ def create_masks(input_file,
         ax.coastlines();
         # save this plot to output path
         fig.savefig(figure_path + '/mask_' + mask_type + '_' + resolution_input + '.png', dpi=300)
+        plt.close()
         print('Mask figure is saved to: ' + figure_path)
     
     if(output_format == 'xarray'):
@@ -164,9 +165,49 @@ def split_masks(input_file,
             ax.coastlines()
             
             fig.savefig(figure_path + '/mask_' + str(count.astype(int)) + '_' + resolution_output + '.png', dpi=300)
+            plt.close()
             
             print(name_file + ' figure is saved to: ' + figure_path)
+    
+    # last mask for places not belonging to any mask above
+    target = xr.Dataset({"MASK": (("time", "lat", "lon"), np.zeros(lon_len*lat_len*time_len).reshape(time_len,lat_len,lon_len))},
+                            coords=ds.coords)
+    target = target.astype(dtype='float32')
+    
+    mask_nan = np.isnan(input_file)
+    target['MASK'][0,:,:] = mask_nan.where(True)
+        
+    target['MASK'].attrs = ds['MASK'].attrs
+    target['lon'].attrs = ds['lon'].attrs
+    target['lat'].attrs = ds['lat'].attrs
+    target['time'].attrs = ds['time'].attrs
+        
+    target.attrs = ds.attrs
+    target.attrs['comment'] = 'region masks, by m.sadiq 2020'
+    target.attrs['history'] = 'made by m.sadiq 2020'
+        
+    if(output_format == 'netcdf'):
+        name_file = 'MASK' + str(nm_masks.astype(int)+1) + '_' + resolution_output + '.nc'
+        target.to_netcdf(output_path + '/' + name_file)
+        print(name_file +' NetCDf file is saved to: ' + output_path)
             
+    if(figure_flag == True):
+        # plot the last mask
+        fig = plt.figure(figsize=[8, 4])
+
+        proj=ccrs.PlateCarree()
+        ax = plt.subplot(111, projection=proj)
+
+        target['MASK'].plot(ax=ax, transform=ccrs.PlateCarree(), cbar_kwargs={'shrink': 0.8})
+        ax.set_title("MASK " + str(nm_masks.astype(int)+1))
+        ax.set_label(' ')
+        ax.coastlines()
+        plt.close()
+            
+        fig.savefig(figure_path + '/mask_' + str(nm_masks.astype(int)+1) + '_' + resolution_output + '.png', dpi=300)
+            
+        print(name_file + ' figure is saved to: ' + figure_path)
+        
     return
 
 

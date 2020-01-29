@@ -37,7 +37,8 @@ def create_masks(input_file,
                  output_format='xarray', 
                  output_path='.', 
                  figure_flag = False, 
-                 figure_path='.'):
+                 figure_path='.',
+                 debug=False):
     """
     This function creates mask files according to the resolution of input file.
     	input_file could be NetCDF file or xarray dataarray, needs to be specified in input_file_type, 
@@ -86,13 +87,18 @@ def create_masks(input_file,
         # save this plot to output path
         fig.savefig(figure_path + '/mask_' + mask_type + '_' + resolution_input + '.png', dpi=300)
         plt.close()
-        print('Mask figure is saved to: ' + figure_path)
+        if(debug == True):
+            print('Mask figure is saved to: ' + figure_path)
+    
+    print('finished creating masks for ' + mask_type)
     
     if(output_format == 'xarray'):
         return mask
     elif(output_format == 'netcdf'):
         mask.to_netcdf(output_path+ '/mask_' + mask_type + '_' + resolution_input +  '.nc')
-        print(mask_type + ' netcdf output file is saved to: ' + output_path)
+        if(debug == True):
+            print(mask_type + ' netcdf output file is saved to: ' + output_path)
+    
     return 
 
 # for testint
@@ -104,7 +110,8 @@ def split_masks(input_file,
                 output_format='netcdf', 
                 output_path='./MASKS', 
                 figure_flag = True, 
-                figure_path='./figures'):
+                figure_path='./figures',
+                debug=False):
     """
     This function splits a mask created by above function into separate mask files
         input_file could be NetCDF file or xarray dataarray, needs to be specified in input_file_type, 
@@ -150,7 +157,8 @@ def split_masks(input_file,
         if(output_format == 'netcdf'):
             name_file = 'MASK' + str(count.astype(int)) + '_' + resolution_output + '.nc'
             target.to_netcdf(output_path + '/' + name_file)
-            print(name_file +' NetCDf file is saved to: ' + output_path)
+            if(debug == True):
+                print(name_file +' NetCDf file is saved to: ' + output_path)
             
         if(figure_flag == True):
             # plot the last mask
@@ -167,7 +175,8 @@ def split_masks(input_file,
             fig.savefig(figure_path + '/mask_' + str(count.astype(int)) + '_' + resolution_output + '.png', dpi=300)
             plt.close()
             
-            print(name_file + ' figure is saved to: ' + figure_path)
+            if(debug == True):
+                print(name_file + ' figure is saved to: ' + figure_path)
     
     # last mask for places not belonging to any mask above
     target = xr.Dataset({"MASK": (("time", "lat", "lon"), np.zeros(lon_len*lat_len*time_len).reshape(time_len,lat_len,lon_len))},
@@ -189,7 +198,8 @@ def split_masks(input_file,
     if(output_format == 'netcdf'):
         name_file = 'MASK' + str(nm_masks.astype(int)+1) + '_' + resolution_output + '.nc'
         target.to_netcdf(output_path + '/' + name_file)
-        print(name_file +' NetCDf file is saved to: ' + output_path)
+        if(debug == True):
+            print(name_file +' NetCDf file is saved to: ' + output_path)
             
     if(figure_flag == True):
         # plot the last mask
@@ -205,9 +215,12 @@ def split_masks(input_file,
         plt.close()
             
         fig.savefig(figure_path + '/mask_' + str(nm_masks.astype(int)+1) + '_' + resolution_output + '.png', dpi=300)
-            
-        print(name_file + ' figure is saved to: ' + figure_path)
         
+        if(debug == True): 
+            print(name_file + ' figure is saved to: ' + figure_path)
+
+    print('finished spliting masks')
+    
     return
 
 

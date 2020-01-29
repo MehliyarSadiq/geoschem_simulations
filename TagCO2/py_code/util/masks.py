@@ -9,39 +9,40 @@ import xarray as xr
 import matplotlib.pyplot as plt # plots
 import cartopy.crs as ccrs      # map projections
 
-import regionmask               # package to create masks
+import regionmask               # package to create masks, https://regionmask.readthedocs.io/en/stable/
 
-def create_masks(input_file, input_file_type='xarray', var_name='emi_co2', mask_type='giorgi', output_format='xarray', output_path='.'):
+def create_masks(input_file, input_file_type='xarray', var_name='emi_co2', mask_type='giorgi', output_format='xarray', output_path='.', plot_path='.'):
     """
     This function creates mask files according to the resolution of input file.
-    	input_file could be NetCDF file, xarray or numpy array, needs to be specified in input_file_type, 
-	input_file_type could be 'netcdf', 'xarray' or 'numpy'
+    	input_file could be NetCDF file or xarray, needs to be specified in input_file_type, 
+	input_file_type could be 'netcdf' or 'xarray'
+        var_name is the name of the variable in the file, preferably a two dimensional variable (lonxlat)
 	mask_type could be 'giorgi', 'srex', 'countries_110', 'countries_50', 'us_states_50', 'us_states_10'
-    	output_format could be 'netcdf', 'xarray' or 'numpy'
+    	output_format could be 'netcdf' or 'xarray'
 	output_path is directory to store output, if output_format is netcdf
+        plot_path is directory to store the output figures
     """
     if(input_file_type=='netcdf'):
         ds = xr.open_dataset(input_file) # read in netcdf file
         dr = ds[var_name]
         #print(dr)
+    elif(input_file_type=='xarray'):
+        dr=input_file[var_name]
     
-    if(mask_type=='giorgi'):
-        mask = regionmask.defined_regions.giorgi.mask(dr)
-    elif(mask_type=='srex'):
-        mask = regionmask.defined_regions.srex.mask(dr)
-    elif(mask_type=='countries_110'):
-        mask = regionmask.defined_regions.natural_earth.countries_110.mask(dr)
-    elif(mask_type=='countries_50'):
-        mask = regionmask.defined_regions.natural_earth.countries_50.mask(dr)
-    elif(mask_type=='us_states_50'):
-        mask = regionmask.defined_regions.natural_earth.us_states_50.mask(dr)
-    elif(mask_type=='us_states_10'):
-        mask = regionmask.defined_regions.natural_earth.us_states_10.mask(dr)
+    # get resolution of input data
+    resolution_input_lon = dr.coords['lon'][3] - dr.coords['lon'][2]
+    resolution_input_lat = dr.coords['lat'][3] - dr.coords['lat'][2]
+    resolution_input = str(resolution_input_lon.values) + 'x' + str(resolution_input_lat.values)
+    
+    if(mask_type in ['giorgi', 'srex']): 
+        mask = getattr(regionmask.defined_regions,mask_type).mask(dr)
+    elif(mask_type in ['countries_110', 'countries_50', 'us_states_50', 'us_states_10']):
+        mask = getattr(regionmask.defined_regions.natural_earth,mask_type).mask(dr)
     else:
         print('mask_type not supported, stopped')
         return
 
-    # plot the mask
+    # make mask plots
     fig = plt.figure(figsize=[8, 4])
 
     proj=ccrs.PlateCarree()
@@ -52,11 +53,16 @@ def create_masks(input_file, input_file_type='xarray', var_name='emi_co2', mask_
     levels = np.arange(low - 0.5, high + 1)
 
     mask.plot(ax=ax, transform=ccrs.PlateCarree(), levels=levels, cmap='tab20', vmax = 21.5, cbar_kwargs={'shrink': 0.8,})
-    ax.set_title(mask_type + " masks")
+    ax.set_title(mask_type + ' ' + str(int(high.values)) + " masks " + resolution_input)
     ax.coastlines();
-
-    fig.savefig(output_path + '/masks_' + mask_type + '.png', dpi=300)
+    # save this plot to output path
+    fig.savefig(plot_path + '/mask_' + mask_type + '_' + resolution_input + '.png', dpi=300)
     
+    if(output_format == 'xarray'):
+        return mask
+    elif(output_format == 'netcdf'):
+        mask.to_netcdf(output_path+ '/mask_' + mask_type + '_' + resolution_input +  '.nc')
     return 
 
-create_masks(input_file='ODIAC_2015_1x1.nc', input_file_type='netcdf', mask_type='giorgi', output_format='xarray', output_path='./plots')
+for mask_type in ['giorgi', 'srex', 'countries_110', 'countries_50', 'us_states_50', 'us_states_10']:
+    create_masks(input_file='ODIAC_2015_1x1.nc', input_file_type='netcdf', mask_type=mask_type, output_format='netcdf', plot_path='./plots', output_path='./nc')

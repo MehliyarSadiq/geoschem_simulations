@@ -4,6 +4,7 @@
         History: 2019-11-15, added area_latlon
                  2020-01-29, added create_masks
                  2020-01-29, split_masks
+                 2020-01-29, mask_plus_times
 """
 
 import numpy as np
@@ -125,7 +126,7 @@ def split_masks(input_file,
     nm_masks = input_file.max().values # number of masks
     
     # open a target file that you want to map your masks to
-    fname = '/home/msadiq/Desktop/co2/data/emission/GC/SE_Asia_mask.generic.1x1.nc'
+    fname = '~/Desktop/co2/data/emission/GC/SE_Asia_mask.generic.1x1.nc'
     ds = xr.open_dataset(fname)
     
     lon_len = len(ds.lon)
@@ -224,3 +225,52 @@ def split_masks(input_file,
     return
 
 
+def mask_plus_times(input_file,
+                    year = '2017',
+                    month = '2017-04',
+                    output_name = 'MASK.nc',
+                    output_path='./MASKS/'):
+    """
+    This function adds time dimension to masks made up above function
+        input_file is NetCDF file
+        year is the year of the emission, daily
+        month is the month of mask to have, rest is all zero
+        output_name is the name of the output file
+        output_path is directory to store output (if format is netcdf)
+    """
+    
+    ds = xr.open_dataset(input_file) # open the input_file
+
+    year_sim = np.array(year,dtype='datetime64[Y]')
+    month_emission = np.array(month,dtype='datetime64[M]')
+
+    # days in year 
+    days = np.arange(year_sim, year_sim + 1, dtype='datetime64[D]')
+    days_in_ns = np.array(days, dtype='M8[ns]') # unit conversion to match source
+
+    lon_len = len(ds.lon) # length of longitude
+    lat_len = len(ds.lat) # length of latitude
+    time_len = len(days_in_ns) # length of time dimension, days in a year
+
+    emi_range = np.arange(month_emission,month_emission+1,dtype='datetime64[D]') # range of time to have the mask, a month
+    
+    target = xr.Dataset({"MASK": (("time", "lat", "lon"), 
+                              np.zeros(lon_len*lat_len*time_len).reshape(time_len,lat_len,lon_len))},)
+    target.coords['lon'] = ds.coords['lon']
+    target.coords['lat'] = ds.coords['lat']
+    target.coords['time'] = days_in_ns
+    target = target.astype(dtype='float32')
+    
+    target['MASK'].loc[emi_range,:,:] = ds['MASK'].values # only assign mask to the month of concern
+    
+    target.to_netcdf(output_path + output_name)
+
+    return
+
+#### test
+mask_plus_times(input_file='~/Desktop/co2/data/emission/MASKS/nc/giorgi/MASK11_1.0x1.0.nc',
+                    year = '2017',
+                    month = '2017-04',
+                    output_path='~/Desktop/co2/data/emission/MASKS/nc/giorgi/')
+
+    

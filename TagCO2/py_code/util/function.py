@@ -2,6 +2,7 @@
     Some useful functions
         Authors: Mehliyar Sadiq
         History: 2019-11-15, added area_latlon
+                 2020-01-29, added create_masks
 """
 
 import numpy as np

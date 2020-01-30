@@ -264,6 +264,8 @@ def mask_plus_times(input_file,
     
     target['MASK'].loc[emi_range,:,:] = ds['MASK'].values # only assign mask to the month of concern
     
+    target['MASK'].attrs = ds['MASK'].attrs
+    
     Path(output_path).mkdir(parents=True, exist_ok=True)
 
     target.to_netcdf(output_path + output_name)

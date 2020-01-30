@@ -2,3 +2,10 @@
 
 ### ./util
 Contains useful functions
+
+### ./
+Chapter 1.
+
+Making masks
+
+

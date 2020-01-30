@@ -11,6 +11,7 @@ import numpy as np
 import xarray as xr
 import matplotlib.pyplot as plt # plots
 import cartopy.crs as ccrs      # map projections
+from pathlib import Path        # check if directory exists, if not, create
 
 import regionmask               # package to create masks, https://regionmask.readthedocs.io/en/stable/
 
@@ -263,6 +264,8 @@ def mask_plus_times(input_file,
     
     target['MASK'].loc[emi_range,:,:] = ds['MASK'].values # only assign mask to the month of concern
     
+    Path(output_path).mkdir(parents=True, exist_ok=True)
+
     target.to_netcdf(output_path + output_name)
 
     return

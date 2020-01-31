@@ -31,7 +31,7 @@ Approximate the area of a spatial grid square from the latitudes and longitudes 
 
 - **create_masks**
 
-This function creates mask files according to the resolution of input file. Six different kinds of masks could be made: 'giorgi', 'srex', 'countries_110', 'countries_50', 'us_states_50', 'us_states_10', using [regionmask](http://regionmask.py) module: [https://regionmask.readthedocs.io/en/stable/](https://regionmask.readthedocs.io/en/stable/)
+This function creates mask files according to the resolution of input file. Six different kinds of masks could be made: 'giorgi', 'srex', 'countries_110', 'countries_50', 'us_states_50', 'us_states_10', using regionmask module: [https://regionmask.readthedocs.io/en/stable/](https://regionmask.readthedocs.io/en/stable/)
 
 **Usage:**
 
@@ -46,15 +46,15 @@ This function creates mask files according to the resolution of input file. Six 
                      debug=False):
         """
         This function creates mask files according to the resolution of input file.
-        	input_file could be NetCDF file or xarray dataarray, needs to be specified in input_file_type, 
-    			input_file_type could be 'netcdf' or 'dataarray'
-          var_name is the name of the variable in the file, preferably a two dimensional variable (lonxlat)
-    			mask_type could be 'giorgi', 'srex', 'countries_110', 'countries_50', 'us_states_50', 'us_states_10'
+            input_file could be NetCDF file or xarray dataarray, needs to be specified in input_file_type, 
+    		input_file_type could be 'netcdf' or 'dataarray'
+            var_name is the name of the variable in the file, preferably a two dimensional variable (lonxlat)
+    		mask_type could be 'giorgi', 'srex', 'countries_110', 'countries_50', 'us_states_50', 'us_states_10'
         	output_format could be 'netcdf' or 'xarray'
-    			output_path is directory to store output, if output_format is netcdf
-          figure_flag, if True, make mask plots and save to figure_path
-          figure_path is directory to store the output figures
-    			debug=False, dose not print progress
+    		output_path is directory to store output, if output_format is netcdf
+            figure_flag, if True, make mask plots and save to figure_path
+            figure_path is directory to store the output figures
+    		debug=False, dose not print progress
         """
 
 - **split_masks**

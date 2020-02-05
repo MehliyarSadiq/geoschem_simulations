@@ -4,6 +4,10 @@
 Contains useful functions
 
 ### ./
+Chapter 0.
+
+Simple exploration of outputs and data
+
 Chapter 1.
 
 Making masks

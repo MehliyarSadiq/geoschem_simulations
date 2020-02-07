@@ -30,7 +30,7 @@ break # break while, start next simulation
 
 else
 echo "Simulation is going on..."
-sleep 100
+sleep 300
 fi
 
 done # while

@@ -23,7 +23,11 @@
 
 [Fossil CO2 & GHG emissions of all world countries, 2017](https://edgar.jrc.ec.europa.eu/overview.php?v=CO2andGHG1970-2016)
 
-4. TNO GHGco emission inventory
+4. ODIAC (fossil fuel CO2 only, global,until 2018)
+
+[Website](https://odiac.org/index.html)
+
+5. TNO GHGco emission inventory
 
 - EU regional, annual, fossil fuel and biofuel CO2, 1km x 1km (2015), 6km x 6km (2005-2018)
 - Source: TNO

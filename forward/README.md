@@ -2,7 +2,7 @@
 
 1. Default emission in GEOS-Chem **(Global, 1x1 monthly)**
 - Biomass burning: GFED, 1997-2018, 0.25, 6 vegetation types
-- **Fossil fuel: CDIAC 1x1 national, 1980-2014**
+- **Fossil fuel: ODIAC 1x1 national, 1980-2014**
 - **MIX for Asia, 4 categories: industry, power, residential and transport**
 - Ocean exchange: climatological exchange for 2000 [Takashi et al., 2009]
 - Balance biosphere exchange: CASA, SiB3 **→ ORCHIDEE**

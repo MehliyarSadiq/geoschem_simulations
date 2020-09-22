@@ -3,9 +3,10 @@
 # Basics:
 
 1. Get access to group machines
-- machines: poirot, renjie or rebus. login to my Linux machine first, in the terminal, then type ' ssh machine_name'
-- met data for GC is stored in: **/geos/d21/GC_DATA/ (ask M if missing data)**
-- HEMCO data is stored in: **/geos/d21/GC_DATA/HEMCO (download if missing)**
+- machines: bosch, poirot, renjie or rebus. login to my Linux machine first, in the terminal, then type ' ssh machine_name'
+- how to simplify login process and set up the environment? Yao Fei has a detailed page on this: https://github.com/FeiYao-Edinburgh/PhD-Edinburgh/blob/master/Documentation/setupComEnv.md 
+- met data for GC is stored in: **/geos/d21/GC_DATA/ExtData (download if you need anything else)**
+- HEMCO data is stored in: **/geos/d21/GC_DATA/ExtData/HEMCO (download if missing)**
 - working directory: **/geos/u73/msadiq**
 
 2.  Getting started with GEOS-Chem
@@ -13,11 +14,11 @@
 - youtube video: https://www.youtube.com/watch?v=LOobuuhNdAg&t=1558s
 - setup linux environment (e.g. compilers, NetCDF libs, etc.), M sent me his settings in .bashrc script. Fei also has .bashrc settings on his Github. Both are similar.
 - Youtube video's building part is outdated, check GC wiki for updated one: make -j4 build, instead of make -j4 mpbuild
-- and then just run the model.
+- and then run the model.
 
 3. Simplified steps to run a simulation, after downloading source code and UT:
 
-1. go to UT directory, modify CopyRunDirs.input (code version, code location, data location, simulation type, length) (**don't know how to change a case name yet, I'm now changing the previous case names and then create new ones**)
+1. go to UT directory, modify CopyRunDirs.input (code version, code location, data location, simulation type, length)
 2. execute gcCopyRunDirs
 3. go to case directory, modify input.geos, HEMCO_Config.rc, HEMICO_Diag.rc, HISTORY.rc (freq, dur)
 4. compile: make realclean; make -j4 build
